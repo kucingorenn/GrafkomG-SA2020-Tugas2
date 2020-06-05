@@ -4,15 +4,26 @@
 #include <GL/freeglut.h>
 
 double rad = 0;
-//glVertex2d(sin(rad) * 100 + x, cos(rad) * 100 + y);
 
-void drawCircle(double r, int vertex) {
+void drawCircle(double r, int vertex, int muter,float prad) {
 	double ngon = (double)vertex;
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < vertex; i++) {
 		double x = r * cos(2 * M_PI * i / ngon);
 		double y = r * sin(2 * M_PI * i / ngon);
-		glVertex2d(sin(rad) * 100 + x + 250, cos(rad) * 100 + y+250);
+		glVertex2d(sin(rad*prad) * muter + x + 250, cos(rad * prad) * muter + y+250);
+		
+	}
+	glEnd();
+}
+
+void drawCircleLines(double r, int vertex) {
+	double ngon = (double)vertex;
+	glBegin(GL_LINE_LOOP);
+	for (int i = 0; i < vertex; i++) {
+		double x = r * cos(2 * M_PI * i / ngon);
+		double y = r * sin(2 * M_PI * i / ngon);
+		glVertex2d(x + 250, y + 250);
 	}
 	glEnd();
 }
@@ -25,17 +36,38 @@ void Display(void) {
 	for (int i = 0; i < 100; i++) {
 		double x = 20 * cos(2 * M_PI * i / 100);
 		double y = 20 * sin(2 * M_PI * i / 100);
-		glVertex2d(x+250, y+250);
+		glVertex2d(x + 250, y + 250);
 	}
 	glEnd();
+	glColor3ub(200, 200, 200); //track
+	drawCircleLines(50, 100);
 
-	glColor3ub(213, 210, 209);
-	drawCircle(10, 80);
+	glColor3ub(200, 200, 200);
+	drawCircleLines(100, 100);
+
+	glColor3ub(200, 200, 200);
+	drawCircleLines(150, 100);
+
+	glColor3ub(200, 200, 200);
+	drawCircleLines(200, 100);
+
+	glColor3ub(213, 210, 209); //merc
+	drawCircle(5, 100, 50, 5);
+
+	glColor3ub(200, 200, 13); //venus
+	drawCircle(6, 100, 100, 3);
+
+	glColor3ub(52, 66, 119); //earth
+	drawCircle(7, 100, 150, 2);
+
+	glColor3ub(161, 37, 27); //mars
+	drawCircle(5, 100, 200, 1);
+
 	glutSwapBuffers();
 }
 
 void Timer(int) {
-	rad += 0.1f;
+	rad += 0.01f;
 
 	glutPostRedisplay();
 	glutTimerFunc(1000 / 60, Timer, 1);
@@ -46,7 +78,7 @@ int main(int argc, char** argv) {
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(800, 800);
 	glutCreateWindow(argv[0]);
 	gluOrtho2D(0, 500, 0, 500);
 	glClearColor(0, 0, 0, 0);
