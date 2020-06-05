@@ -1,1 +1,2 @@
-# GrafkomG-SA2020-Tugas2
+# Nama : Bimo Adam
+# NIM  : 672018274
