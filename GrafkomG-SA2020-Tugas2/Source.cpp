@@ -1,99 +1,60 @@
+#define _USE_MATH_DEFINES
 #include <iostream>
+#include <math.h>
 #include <GL/freeglut.h>
 
-float xpos = 0;
-float ypos = 0;
-float deltax = 5;
-float deltay = 10;
-bool toRight = true;
-bool toUp = true;
-int time = 30;
-bool pause = false;
+double rad = 0;
+//glVertex2d(sin(rad) * 100 + x, cos(rad) * 100 + y);
 
-void display() {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glColor3f(1.0, 1.0, 1.0);
-
-	glBegin(GL_QUADS);
-	glVertex2f(-9 + xpos, 12 + ypos);
-	glVertex2f(-9 + xpos, -12 + ypos);
-	glVertex2f(9 + xpos, -12 + ypos);
-	glVertex2f(9 + xpos, 12 + ypos);
-
+void drawCircle(double r, int vertex) {
+	double ngon = (double)vertex;
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < vertex; i++) {
+		double x = r * cos(2 * M_PI * i / ngon);
+		double y = r * sin(2 * M_PI * i / ngon);
+		glVertex2d(sin(rad) * 100 + x + 250, cos(rad) * 100 + y+250);
+	}
 	glEnd();
+}
+
+void Display(void) {
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glColor3ub(253, 184, 19);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < 100; i++) {
+		double x = 20 * cos(2 * M_PI * i / 100);
+		double y = 20 * sin(2 * M_PI * i / 100);
+		glVertex2d(x+250, y+250);
+	}
+	glEnd();
+
+	glColor3ub(213, 210, 209);
+	drawCircle(10, 80);
 	glutSwapBuffers();
 }
 
-void myinit() {
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glColor3f(1.0, 0.0, 0.0);
-	glPointSize(2.0);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(-500, 500, -500, 500);
-}
+void Timer(int) {
+	rad += 0.1f;
 
-void myKeyboard(unsigned char key, int x, int y) {
-
-	if (key == 'p' && !pause) {
-		time = 1;
-		pause = true;
-	}
-	else if (key == 'p' && pause) {
-		time = 30;
-		pause = false;
-	}
-
-
-	std::cout << "key " << key << " pressed" << std::endl;
-}
-
-void timer(int) {
 	glutPostRedisplay();
-	glutTimerFunc(1000 / time, timer, 0);
-
-	if (xpos < 488 && toRight) {
-		xpos += deltax;
-	}
-	else {
-		toRight = false;
-	}
-
-	if (ypos < 488 && toUp) {
-		ypos += deltay;
-	}
-	else {
-		toUp = false;
-	}
-
-	if (ypos > -488 && !toUp) {
-		ypos -= deltay;
-	}
-	else {
-		toUp = true;
-	}
-
-	if (xpos > -488 && !toRight) {
-		xpos -= deltax;
-	}
-	else {
-		toRight = true;
-	}
-
-
+	glutTimerFunc(1000 / 60, Timer, 1);
 }
+
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glutInitWindowSize(640, 480);
-	glutInitWindowPosition(0, 0);
-	glutCreateWindow("Points");
-	glutDisplayFunc(display);
 
-	myinit();
-	glutKeyboardFunc(myKeyboard);
-	glutTimerFunc(0, timer, 0);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutInitWindowPosition(0, 0);
+	glutInitWindowSize(500, 500);
+	glutCreateWindow(argv[0]);
+	gluOrtho2D(0, 500, 0, 500);
+	glClearColor(0, 0, 0, 0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glutTimerFunc(1000 / 60, Timer, 1);
+	glutDisplayFunc(Display);
 	glutMainLoop();
 
-	return 0;
+	return(0);
 }
