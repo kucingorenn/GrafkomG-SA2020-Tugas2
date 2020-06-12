@@ -4,14 +4,15 @@
 #include <GL/freeglut.h>
 
 double rad = 0;
+double brad = 0;
 
-void drawCircle(double r, int vertex, int muter,float prad) {
+void drawCircle(double r, int vertex, int jarakmuter,float speedrad) {
 	double ngon = (double)vertex;
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < vertex; i++) {
 		double x = r * cos(2 * M_PI * i / ngon);
 		double y = r * sin(2 * M_PI * i / ngon);
-		glVertex2d(sin(rad*prad) * muter + x + 250, cos(rad * prad) * muter + y+250);
+		glVertex2d(sin(rad * speedrad) * jarakmuter + x + 250, cos(rad * speedrad) * jarakmuter + y + 250);
 		
 	}
 	glEnd();
@@ -39,7 +40,7 @@ void Display(void) {
 		glVertex2d(x + 250, y + 250);
 	}
 	glEnd();
-	glColor3ub(200, 200, 200); //track
+	glColor3ub(200, 200, 200); //track orbit
 	drawCircleLines(50, 100);
 
 	glColor3ub(200, 200, 200);
@@ -60,6 +61,16 @@ void Display(void) {
 	glColor3ub(52, 66, 119); //earth
 	drawCircle(7, 100, 150, 2);
 
+	glColor3ub(200, 200, 13);
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < 100; i++) {
+		double x = 2 * cos(2 * M_PI * i / 100);
+		double y = 2 * sin(2 * M_PI * i / 100);
+		glVertex2d(sin(rad * 3) * 20 + x + 250, cos(rad * 3) * 20 + y + 100);
+
+	}
+	glEnd();
+
 	glColor3ub(161, 37, 27); //mars
 	drawCircle(5, 100, 200, 1);
 
@@ -68,7 +79,6 @@ void Display(void) {
 
 void Timer(int) {
 	rad += 0.01f;
-
 	glutPostRedisplay();
 	glutTimerFunc(1000 / 60, Timer, 1);
 }
